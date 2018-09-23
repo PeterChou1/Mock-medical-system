@@ -1,0 +1,211 @@
+setup|my_chromo|ChromosomePair()
+
+# testing set_by_pos and get_by_pos method
+my_chromo.set_by_pos(0, 'AC')|'test method set_by_pos for proper return'|None
+my_chromo.get_by_pos(0)|'test method set_by_pos and get_by_pos if it was set correctly and get correctly'|'AC'
+
+# testing get_all_pos method
+my_chromo.get_all_pos() == {0}|'test method get_all_pos if get all pos works correctly'|True
+
+#===end of testing ChromosomePair===#
+
+setup|my_chromo_set|ChromosomeSet(22, 22)
+
+# testing get_total_pair method
+my_chromo_set.get_total_pair()|'test get_total_pair method for proper return'|22
+
+# testing set_sex_chromo and get_sex_chromo method
+my_chromo_set.set_sex_chromo(17)|'test set_sex_chromosome for proper return'|None
+my_chromo_set.get_sex_chromo()|'test get_sex_chromosome and set_sex_chromosome for proper set and get'|17
+
+# testing set_chromosome and get_chromosome method
+my_chromo_set.set_chromosome(0, my_chromo)|'test method set_chromosome for proper return'|None
+my_chromo_set.get_chromosome(0).get_by_pos(0)|'test method set_chromosome and get_chromosome if it set and get properly'|'AC'
+
+# testing set_by_pos and get_by_pos method
+my_chromo_set.set_by_pos(0, 0, 'AT')|'test method set_by_pos for proper return'|None
+my_chromo_set.get_by_pos(0, 0)|'test method set_by_pos and get_by_pos if it was set correctly and get correctly'|'AT'
+
+# testing set marker, _get_by_marker, set_by_marker and get_by_marker method
+my_chromo_set.set_marker('rs14',0 ,0)|'test method set_marker for proper return'|None
+my_chromo_set._get_by_marker_index('rs14')|'test method _get_by_marker and set_marker for correct setting and getting'|(0, 0)
+my_chromo_set.set_by_marker('rs14','AA')|'test method set_by_marker for proper return'|None
+my_chromo_set.get_by_marker('rs14')|'test method get_by_marker and set_by_marker for correct setting and getting'|'AA'
+
+#===end of testing ChromosomeSet===#
+
+# testing set_by_pos in Query
+setup|my_query|Query()
+setup|setup1|my_query.set_by_pos(0, 0, '11')
+my_query.get_by_pos(0, 0)|'test method set_by_pos in query for correct setting'|'11'
+
+# testing set_by_marker in Query
+setup|my_query|Query()
+setup|setup1|my_query.set_marker('rs15', 0 ,0)
+my_query.set_by_marker('rs15','22')|'test method set by marker for correct return'|None
+my_query.get_by_marker('rs15')|'test method set by marker in query for correct setting'|'22'
+
+#===end of testing Query===#
+
+# testing set_sex and get_sex in Binder
+setup|my_binder|Binder()
+my_binder.set_sex('M')|'test method set sex method in binder for correct return'|None
+my_binder.get_sex()|'testing binder get sex and set sex method in binder for correct set and get'|'M'
+
+# testing set_by_pos in Binder
+setup|my_binder|Binder()
+setup|setup1|my_binder.set_by_pos(0, 0, 'LM')
+my_binder.get_by_pos(0, 0)|'test method set_by_pos in query for correct setting'|'LM'
+
+# testing set_by_marker in Binder
+setup|my_binder|Binder()
+setup|setup1|my_binder.set_marker('rs15', 0 ,0)
+my_binder.set_by_marker('rs15', 'RM')|'test method set by marker for correct return'|None
+my_binder.get_by_marker('rs15')|'test method set by marker in query for correct setting'|'RM'
+
+#===end of testing Binder===#
+
+setup|my_human|Human('121')
+
+# testing set_id, get_id method
+my_human.set_id('321')|'test set id method for correct return'|None
+my_human.get_id()|'test get id and set id for correct get and set'|'321'
+
+# testing set_by_pos in Human
+setup|my_human|Human('122')
+setup|setup1|my_human.set_by_pos(0, 0, 'AC')
+my_human.get_by_pos(0, 0)|'test method set_by_pos in query for correct setting'|'AC'
+
+# testing set_by_marker in Human
+setup|my_human|Human('123')
+setup|setup1|my_human.set_marker('rs15', 0 ,0)
+my_human.set_by_marker('rs15','AA')|'test method set by marker for correct return'|None
+my_human.get_by_marker('rs15')|'test method set by marker in query for correct setting'|'AA'
+
+# testing test method in Human
+setup|my_male|Male('124')
+setup|my_query|Query()
+my_male.test(my_query)|'test method test for empty male chromosome and empty query'|True
+
+setup|my_male|Male('125')
+setup|my_query|Query()
+my_query.set_by_pos(0, 0, 'AC')
+my_male.test(my_query)|'test method test for empty male and one entry in query'|True
+
+setup|my_male|Male('126')
+setup|my_query|Query()
+setup|setup1|my_query.set_by_pos(22, 22, 'AT')
+my_male.test(my_query)|'test method test for empty male and one entry in query at sex chromosome'|False
+
+setup|my_female|Female('127')
+setup|my_query|Query()
+setup|setup1|my_query.set_by_pos(22, 22, 'AC')
+my_female.test(my_query)|'test method test for empty female and one entry in query at sex chromosome'|True
+
+setup|my_query|Query()
+setup|my_male|Male('128')
+setup|setup1|my_query.set_by_pos(0, 0, 'AA')
+setup|setup2|my_male.set_by_pos(0, 0, 'AA')
+my_male.test(my_query)|'test method test for one entry in male and one entry in query matching'|True
+
+setup|my_query|Query()
+setup|my_male|Male('129')
+setup|setup1|my_query.set_by_pos(0, 0, 'AA')
+setup|setup2|my_query.set_by_pos(1, 1, 'CA')
+setup|setup3|my_male.set_by_pos(0, 0, 'AA')
+setup|setup4|my_male.set_by_pos(1, 1, 'CA')
+my_male.test(my_query)|'test method test for two entry in male and two entry in query matching'|True
+
+setup|my_query|Query()
+setup|my_male|Male('130')
+setup|setup1|my_query.set_by_pos(0, 0, '12')
+setup|setup3|my_male.set_by_pos(0, 0, 'AC')
+my_male.test(my_query)|'test method test with one entry in male and one entry in query for memory nucleotide'|True
+
+setup|my_query|Query()
+setup|my_male|Male('131')
+setup|setup1|my_query.set_by_pos(0, 0, '12')
+setup|setup2|my_query.set_by_pos(0, 1, '21')
+setup|setup3|my_male.set_by_pos(0, 0, 'AC')
+setup|setup4|my_male.set_by_pos(0, 1, 'CA')
+my_male.test(my_query)|'test method test with two entry in male and two entry in query for memory nucleotide'|True
+
+setup|my_query|Query()
+setup|my_male|Male('132')
+setup|setup1|my_query.set_by_pos(0, 0, '12')
+setup|setup2|my_query.set_by_pos(1, 1, '21')
+setup|setup3|my_male.set_by_pos(0, 0, 'AC')
+setup|setup4|my_male.set_by_pos(1, 1, 'CA')
+my_male.test(my_query)|'test method test with two entry in male and two entry in query for memory nucleotide in two different chromosomes'|True
+
+setup|my_query|Query()
+setup|my_male|Male('133')
+setup|setup3|my_query.set_by_pos(0, 2, '12')
+setup|setup4|my_query.set_by_pos(0, 3, '21')
+setup|setup5|my_query.set_by_pos(0, 4, '29')
+setup|setup6|my_query.set_by_pos(0, 5, '96')
+setup|setup6|my_query.set_by_pos(0, 6, '69')
+setup|setup3|my_male.set_by_pos(0, 2, 'TA')
+setup|setup3|my_male.set_by_pos(0, 3, 'AT')
+setup|setup3|my_male.set_by_pos(0, 4, 'AG')
+setup|setup3|my_male.set_by_pos(0, 5, 'GC')
+setup|setup3|my_male.set_by_pos(0, 6, 'CG')
+my_male.test(my_query)|'test method test with more than 2 memory nucleotide'|True
+
+setup|my_query|Query()
+setup|my_male|Male('134')
+setup|setup1|my_query.set_by_pos(0, 0, 'AA')
+setup|setup2|my_query.set_by_pos(0, 1, 'CC')
+setup|setup3|my_query.set_by_pos(0, 2, '98')
+setup|setup4|my_query.set_by_pos(0, 3, '87')
+setup|setup5|my_query.set_by_pos(1, 3, '78')
+setup|setup6|my_male.set_by_pos(0, 0, 'AA')
+setup|setup7|my_male.set_by_pos(0, 1, 'CC')
+setup|setup8|my_male.set_by_pos(0, 2, 'AT')
+setup|setup9|my_male.set_by_pos(0, 3, 'TG')
+setup|setup10|my_male.set_by_pos(1, 3, 'GT')
+my_male.test(my_query)|'test method test with combination of memory nucleotide and normal nucleotide in different chromosomes'|True
+
+setup|my_dad|Male('135')
+setup|my_mom|Female('136')
+setup|binder|Binder()
+
+# test procreate method in Female
+setup|setup1|binder.set_sex('F')
+setup|my_child|my_mom.procreate(my_dad, binder)
+my_child.__class__.__name__|'Check for correct return Female'|'Female'
+
+setup|setup1|binder.set_sex('M')
+setup|my_child|my_mom.procreate(my_dad, binder)
+my_child.__class__.__name__|'Check for correct return Male'|'Male'
+
+setup|setup1|binder.set_by_pos(0, 0, 'LM')
+setup|setup2|my_dad.set_by_pos(0, 0, 'AG')
+setup|setup3|my_mom.set_by_pos(0, 0, 'TC')
+setup|setup1|binder.set_sex('M')
+setup|my_child|my_mom.procreate(my_dad, binder)
+my_child.__class__.__name__|'Check for correct return'|'Male'
+my_child.get_by_pos(0, 0)|'test method procreate for correct set left maternal'|'TG'
+
+
+setup|setup1|binder.set_by_pos(0, 0, 'RM')
+setup|setup2|my_dad.set_by_pos(0, 0, 'AG')
+setup|setup3|my_mom.set_by_pos(0, 0, 'TC')
+setup|setup1|binder.set_sex('M')
+setup|my_child|my_mom.procreate(my_dad, binder)
+my_child.__class__.__name__|'Check for correct return'|'Male'
+my_child.get_by_pos(0, 0)|'test method procreate for correct set right maternal'|'AC'
+
+setup|setup1|binder.set_by_pos(0, 0, 'RM')
+setup|setup1|binder.set_by_pos(0, 1, 'LM')
+setup|setup2|my_dad.set_by_pos(0, 0, 'AG')
+setup|setup2|my_dad.set_by_pos(0, 1, 'GG')
+setup|setup3|my_mom.set_by_pos(0, 0, 'TC')
+setup|setup3|my_mom.set_by_pos(0, 1, 'AA')
+setup|setup1|binder.set_sex('M')
+setup|my_child|my_mom.procreate(my_dad, binder)
+my_child.__class__.__name__|'Check for correct return'|'Male'
+my_child.get_by_pos(0, 0)|'test method procreate with mutiple entries in binder'|'AC'
+my_child.get_by_pos(0, 1)|'test method procreate with mutiple entries in binder'|'AG'
+
+#===end of testing Human and all Human Subclass===#
